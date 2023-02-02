@@ -9,3 +9,8 @@ data class FormRequest(
     val ssn: Ssn,
     val formData: MiniForm
 )
+
+@Serializable
+data class GetFormRequest(
+    val formId: String
+)

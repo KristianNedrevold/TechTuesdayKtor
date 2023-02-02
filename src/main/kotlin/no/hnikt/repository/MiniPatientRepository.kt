@@ -16,6 +16,7 @@ interface MiniPatientRepository {
     suspend fun createMiniPatient(ssn: Ssn): MiniPatientRepositoryResult<Int>
     suspend fun readPatient(ssn: Ssn): MiniPatientRepositoryResult<MiniPatient>
     suspend fun deletePatient(ssn: Ssn): MiniPatientRepositoryResult<Unit>
+    suspend fun upsertPatient(ssn: Ssn): MiniPatientRepositoryResult<MiniPatient>
 }
 
 fun miniPatientRepository(db: MutableSet<Ssn>) = object : MiniPatientRepository {
@@ -35,5 +36,12 @@ fun miniPatientRepository(db: MutableSet<Ssn>) = object : MiniPatientRepository 
 
     override suspend fun deletePatient(ssn: Ssn): MiniPatientRepositoryResult<Unit> {
         TODO("Not yet implemented")
+    }
+
+    override suspend fun upsertPatient(ssn: Ssn): MiniPatientRepositoryResult<MiniPatient> = withMutex(repoMutex) {
+       if (!db.contains(ssn)) {
+           db.add(ssn)
+           MiniPatientRepositoryResult.Success(MiniPatient(ssn, db.indexOf(ssn)))
+       } else MiniPatientRepositoryResult.Failure("You dummy")
     }
 }

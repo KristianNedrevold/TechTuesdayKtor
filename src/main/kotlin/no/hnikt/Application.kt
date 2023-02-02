@@ -6,6 +6,7 @@ import io.ktor.server.engine.*
 import io.ktor.server.netty.*
 import io.ktor.server.plugins.contentnegotiation.*
 import kotlinx.serialization.json.Json
+import no.hnikt.api.setupRoutes
 import no.hnikt.dependencies.AppDb
 import no.hnikt.dependencies.setupDependencies
 
@@ -18,6 +19,7 @@ fun Application.setup() {
     setupPlugins()
     val db = AppDb
     val dependencies = setupDependencies(db)
+    setupRoutes(dependencies.miniFormService)
 }
 
 fun Application.setupPlugins() {

@@ -13,7 +13,7 @@ data class MiniFormEntity(
     val miniFormPid: Int,
     val miniForm: MiniForm,
     val miniPatient: MiniPatient,
-    val created: LocalDateTime
+    val created: String
 )
 
 sealed interface MiniFormRepositoryResult<out T> {
@@ -33,7 +33,7 @@ fun miniFormRepository(db : MutableList<MiniFormEntity>) = object : MiniFormRepo
     val repoMutex = Mutex()
 
     override suspend fun createMiniForm(miniPatient: MiniPatient, miniForm: MiniForm): MiniFormRepositoryResult<Int> = withMutex(repoMutex) {
-        db.add(MiniFormEntity(db.size, miniForm, miniPatient, LocalDateTime.from(Instant.now())))
+        db.add(MiniFormEntity(db.size, miniForm, miniPatient, "Today"))
         MiniFormRepositoryResult.Success(db.size)
     }
 
